@@ -10,7 +10,7 @@ def presentacion_info():
     print("¡Buena suerte!")
     
 usuario = "jugador"
-contrasena = "bruno"
+contraseña = "bruno"
 desplazamiento = 3
 
 def encriptar(texto, desplazamiento):
@@ -29,16 +29,36 @@ def login():
     while contador < 3:
         u = input("Ingrese su usuario: ")
         c = input("Ingrese su contraseña: ")
-        if u == usuario and c == contrasena:
+        if u == usuario and c == contraseña:
             print("ACCESO CONCEDIDO, BIENVENIDO!.")
             return
         contador += 1
         if contador < 3:
             print("Usuario o contraseña incorrectos. Intente nuevamente.")
-    print("Ha superado el límite de intentos. El juego se cerrará.")
+    print("Ha superado el limite de intentos. El juego se cerrará.")
     exit()
+def instrucciones():
+    print("INSTRUCCIONES DEL JUEGO")
+    print("1. Deben trabajar en equipo para resolver las salas y desbloquear la salida.")
+    print("2. Cada sala tiene un juego el cual deben resolver.")
+    print("3. ¡No se rindan! La salida es mas facil de lo que parece, usen su imaginacion e inteligencia!.")
+    n = input("Ingrese 'volver' para volver al menu principal: ").lower()
+    while n != "volver":
+        print("Opcion invalida, ingrese nuevamente")
+        n = input("Ingrese 'volver' para volver al menu principal: ").lower()
+    menu()
 
+def menu():
+    print("MENU PRINCIPAL\n1- Instrucciones\n2- Jugar|\n3- Cambiar contraseña\n4- Cerrar sesion\nIngrese el numero segun la opcion que quiera realizar")
+    opcion = int(input("Ingrese su opcion: "))
+    while opcion > 4 or opcion < 1:
+        print("Opcion invalida, ingrese nuevamente")
+        opcion = int(input("Ingrese su opcion: "))
+    if opcion == 1:
+        instrucciones()
+    
 presentacion_info()
-encriptacion = encriptar(contrasena, desplazamiento)
+encriptacion = encriptar(contraseña, desplazamiento)
 print(encriptacion)
-login()
+login() 
+menu()
