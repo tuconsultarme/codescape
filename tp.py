@@ -1,6 +1,8 @@
 """TRABAJO GRUPAL ESCAPE ROOM
 GRUPO: BAUTISTA KAHR, BRUNO MASSACCESI, SALVADOR SONCINI, VALENTINA PERIE"""
 
+from SALA1 import jugar_sala1
+
 
 def presentacion_info():
     print("¡Bienvenidos al Escape Room!")
@@ -88,7 +90,7 @@ def menu(usuario, contraseña):
         if opcion_menu == 1:
             instrucciones()
         elif opcion_menu == 2:
-            print("")
+            jugar_sala1()
         elif opcion_menu == 3:
             contraseña = cambiar_contraseña(usuario, contraseña)
         elif opcion_menu == 4:
