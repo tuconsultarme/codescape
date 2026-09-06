@@ -8,10 +8,10 @@ def presentacion_info():
     print("Trabajen en equipo y utilicen su ingenio para encontrar pistas y desbloquear la salida.")
     print("Al comienzo deberas loguearte con tu usuario y contraseña.")
     print("¡Buena suerte!")
-    
-usuario = "jugador"
-contraseña = "bruno"
-desplazamiento = 3
+
+USUARIO = "jugador"
+CONTRASEÑA = "bruno"
+DESPLAZAMIENTO = 3
 
 def encriptar(texto, desplazamiento):
     resultado = ""
@@ -19,17 +19,29 @@ def encriptar(texto, desplazamiento):
         codigo = ord(letra)
         nuevo_codigo = (codigo - 32 + desplazamiento) % 95 + 32
         resultado = resultado + chr(nuevo_codigo)
-        
+
     return resultado
 
 
 
-def login():
+def validar_credenciales(usuario_ingresado, contraseña_ingresada, usuario_correcto, contraseña_correcta):
+    """Tiene como parametro el usuario y la contraseña ingresados por el usuario, y los compara con los correctos."""
+    if usuario_ingresado == usuario_correcto and contraseña_ingresada == contraseña_correcta:
+        return True
+    else:
+        return False
+
+
+def login(usuario_correcto, contraseña_correcta):
+    """Solicita al usuario que ingrese su usuario y contraseña con un limite maximo de 3 intentos erroneos.
+    La funcion recibe como parametro el usuario y contraseña correcta para la comparacion.
+    Termina el programa si se agotan los intentos.
+    """
     contador = 0
     while contador < 3:
-        u = input("Ingrese su usuario: ")
-        c = input("Ingrese su contraseña: ")
-        if u == usuario and c == contraseña:
+        usuario_ingresado = input("Ingrese su usuario: ").strip()
+        contraseña_ingresada = input("Ingrese su contraseña: ").strip()
+        if validar_credenciales(usuario_ingresado, contraseña_ingresada, usuario_correcto, contraseña_correcta):
             print("ACCESO CONCEDIDO, BIENVENIDO!.")
             return
         contador += 1
@@ -37,28 +49,29 @@ def login():
             print("Usuario o contraseña incorrectos. Intente nuevamente.")
     print("Ha superado el limite de intentos. El juego se cerrará.")
     exit()
+
 def instrucciones():
     print("INSTRUCCIONES DEL JUEGO")
     print("1. Deben trabajar en equipo para resolver las salas y desbloquear la salida.")
     print("2. Cada sala tiene un juego el cual deben resolver.")
-    print("3. ¡No se rindan! La salida es mas facil de lo que parece, usen su imaginacion e inteligencia!.")
-    n = input("Ingrese 'volver' para volver al menu principal: ").lower()
-    while n != "volver":
+    print("3. ¡No se rindan! La salida es mas facil de lo que parece, usen su imaginacion e inteligencia!")
+    opcion_volver = input("Ingrese 'volver' para volver al menu principal: ").lower()
+    while opcion_volver != "volver":
         print("Opcion invalida, ingrese nuevamente")
-        n = input("Ingrese 'volver' para volver al menu principal: ").lower()
+        opcion_volver = input("Ingrese 'volver' para volver al menu principal: ").lower().strip()
     menu()
 
 def menu():
-    print("MENU PRINCIPAL\n1- Instrucciones\n2- Jugar|\n3- Cambiar contraseña\n4- Cerrar sesion\nIngrese el numero segun la opcion que quiera realizar")
-    opcion = int(input("Ingrese su opcion: "))
-    while opcion > 4 or opcion < 1:
+    print("MENU PRINCIPAL\n1- Instrucciones\n2- Jugar\n3- Cambiar contraseña\n4- Cerrar sesion\nIngrese el numero segun la opcion que quiera realizar")
+    opcion_menu = int(input("Ingrese su opcion: "))
+    while opcion_menu > 4 or opcion_menu < 1:
         print("Opcion invalida, ingrese nuevamente")
-        opcion = int(input("Ingrese su opcion: "))
-    if opcion == 1:
+        opcion_menu = int(input("Ingrese su opcion: "))
+    if opcion_menu == 1:
         instrucciones()
-    
+
 presentacion_info()
-encriptacion = encriptar(contraseña, desplazamiento)
+encriptacion = encriptar(CONTRASEÑA, DESPLAZAMIENTO)
 print(encriptacion)
-login() 
+login(USUARIO, CONTRASEÑA)
 menu()
