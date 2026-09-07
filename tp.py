@@ -2,6 +2,7 @@
 GRUPO: BAUTISTA KAHR, BRUNO MASSACCESI, SALVADOR SONCINI, VALENTINA PERIE"""
 
 from SALA1 import jugar_sala1
+from SALA2 import jugar_sala2
 
 
 def presentacion_info():
@@ -90,7 +91,8 @@ def menu(usuario, contraseña):
         if opcion_menu == 1:
             instrucciones()
         elif opcion_menu == 2:
-            jugar_sala1()
+            if jugar_sala1() == True:  # a la sala 2 solo se pasa si supero la sala 1
+                jugar_sala2()
         elif opcion_menu == 3:
             contraseña = cambiar_contraseña(usuario, contraseña)
         elif opcion_menu == 4:
