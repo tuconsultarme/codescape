@@ -1,116 +1,70 @@
-"""SALA 1 - AHORCADO
-TRABAJO GRUPAL ESCAPE ROOM
-GRUPO: BAUTISTA KAHR, BRUNO MASSACCESI, SALVADOR SONCINI, VALENTINA PERIE"""
+"""SALA 1 DE AHORCADO"""
 
-from random import choice
+import random
 
-PALABRAS_SECRETAS = ["PROGRAMACION", "BIBLIOTECA", "PROFESOR", "ASCENSOR",
-                     "PIZARRON", "MOCHILA", "PARCIAL", "CAFETERIA",
-                     "ESCALERA", "LABORATORIO", "ALGORITMO", "TECLADO"]
-VIDAS_MAXIMAS = 6
+PALABRAS = ["INGENIERIA", "FACULTAD", "INDEPENDENCIA", "LABORATORIOS", "PROGRAMACION", "MATERIAS", "EMPRESA", "CURSADA", "RECUPERATORIO", "CARRERA"]
 
+INTENTOS_MAXIMOS = 6
 
-def elegir_palabra(lista_de_palabras):
-    """Elige una palabra al azar de la lista usando choice().
-    Recibe como parametro la lista de palabras y devuelve una sola."""
-    palabra_elegida = choice(lista_de_palabras)
-    return palabra_elegida
+def elegir_palabra():
+    return random.choice(PALABRAS)
 
-
-def mostrar_casilleros(palabra_secreta, letras_descubiertas):
-    """Dibuja un casillero por cada letra de la palabra y le pone la letra encima.
-    Si la letra todavia no fue descubierta, el casillero queda vacio.
-    Recibe la palabra secreta y las letras que el jugador ya descubrio."""
-    fila_de_letras = ""
-    fila_de_casilleros = ""
-    for letra in palabra_secreta:
-        if letra in letras_descubiertas:
-            fila_de_letras = fila_de_letras + " " + letra + "  "
-        else:
-            fila_de_letras = fila_de_letras + "    "
-        fila_de_casilleros = fila_de_casilleros + "___ "
-    print(fila_de_letras)
-    print(fila_de_casilleros)
-
-
-def pedir_letra():
-    """Pide una letra y no la devuelve hasta que sea valida.
-    Verifica que se haya ingresado un solo caracter y que ese caracter sea una letra.
-    Como no sale del bucle hasta que este bien, una entrada invalida no gasta vidas."""
+def pedir_letra(letras_usadas):
     while True:
-        letra_ingresada = input("Ingrese una letra: ").strip().upper()
-        if len(letra_ingresada) != 1:
-            print("Debe ingresar exactamente una letra.")
-        elif letra_ingresada.isalpha() == False:
-            print("Solo se permiten letras, no numeros ni simbolos.")
+        letra = input("Ingrese una letra: ").strip().upper()
+        if len(letra) == 1 and letra.isalpha(): #verifica que sea una sola letra y sea una letra del abeecedario
+            if letra not in letras_usadas: #si no uso la letra, la retorns
+                return letra
+            else:
+                print("Ya ha ingresado esa letra. Intente nuevamente.") #en el caso de que se haya usado, la vuelve a pedir
         else:
-            return letra_ingresada
+            print("Texto invalido. Ingrese una sola letra del abecedario.") #si el texto no esuna sola letra, vuelve a pedir la letra
 
+def mostrar_incognitas(palabra, letras_adivinadas):
+    """Devuelve la palabra mostrando las letras adivinadas y '_' en las que faltan."""
+    resultado = ""
+    for letra in palabra: #recorro cada letra de la palabra
+        if letra in letras_adivinadas: #en cada vuelta pregunto si la letra esta en las letras adivinadas, si es asi, la agrego al resultado, sino, agrego un guion bajo.
+            resultado = resultado + letra + " " #si la adivino, agrego la letra y un espacio para que se vea mejor
+        else:
+            resultado = resultado + "_ " #No la adivino, se agrega un guion bajo y un espacio para que se vea mejor
+    return resultado
 
-def esta_completa(palabra_secreta, letras_descubiertas):
-    """Verifica si ya se descubrieron todas las letras de la palabra.
-    Devuelve True si esta completa y False si todavia falta alguna."""
-    for letra in palabra_secreta:
-        if letra not in letras_descubiertas:
-            return False
+def palabra_adivinada(palabra, letras_adivinadas):
+    """Lo que hace esta funcuion es recorrer letra x letra la palabra incognita.
+    Hay una condicion que verifica que la letra no este en la lista de las letras adivinadas. En ese caso, retorna False ya que quedan letras por descubrir.
+    En el caso de que no queden letras por descubir, no entra en el if, ya que todas las letras de la palabra estan adivinadas."""
+    for letra in palabra: 
+        if letra not in letras_adivinadas: 
+            return False 
     return True
 
 
-def separar_con_espacios(letras_usadas):
-    """Devuelve las letras usadas separadas con espacios para que se lean mejor."""
-    texto = ""
-    for letra in letras_usadas:
-        texto = texto + letra + " "
-    return texto
-
-
-def mostrar_estado(palabra_secreta, letras_descubiertas, letras_usadas, vidas_restantes):
-    """Muestra los casilleros de la palabra, las letras ya usadas y las vidas que quedan."""
-    print("")
-    mostrar_casilleros(palabra_secreta, letras_descubiertas)
-    print("Letras usadas:", separar_con_espacios(letras_usadas))
-    print("Vidas:", vidas_restantes)
-
-
 def jugar_sala1():
-    """Sala 1 del Escape Room, el juego del Ahorcado.
-    Elige una palabra al azar y el jugador la tiene que descubrir letra por letra.
-    Arranca con 6 vidas y pierde una por cada letra que no este en la palabra.
-    Devuelve True si el jugador supera la sala y False si se queda sin vidas."""
-    palabra_secreta = elegir_palabra(PALABRAS_SECRETAS)
-    letras_descubiertas = ""
-    letras_usadas = ""
-    vidas_restantes = VIDAS_MAXIMAS
+    """Funcion principal de la sala 1. Se encarga de manejar el juego del ahorcado."""
+    palabra = elegir_palabra()
+    letras_adivinadas = []
+    letras_usadas = []
+    vidas = INTENTOS_MAXIMOS
+    print("Bienvenido a la sala 1. Estas encerrado en el aula de Programacion, las puertas estan cerradas y debes acceder al sistema para abrirlas. Para lograrlo, tenes que adivinar la palabra secreta. Tenes 6 intentos para adivinarla. ¡Buena suerte!")
+    while vidas > 0 and palabra_adivinada(palabra, letras_adivinadas) == False:
+        print("\n" + mostrar_incognitas(palabra, letras_adivinadas))
+        print("Vidas:", vidas)
+        print("Letras usadas:", letras_usadas)
 
-    print("")
-    print("SALA 1 - EL AULA DE PROGRAMACION")
-    print("Te despertaste solo en el aula y la puerta esta cerrada con una clave.")
-    print("Adivina la palabra oculta para poder salir. Tenes", VIDAS_MAXIMAS, "vidas.")
+        letra = pedir_letra(letras_usadas)
+        letras_usadas.append(letra)
 
-    while vidas_restantes > 0 and esta_completa(palabra_secreta, letras_descubiertas) == False:
-        mostrar_estado(palabra_secreta, letras_descubiertas, letras_usadas, vidas_restantes)
-        letra_ingresada = pedir_letra()
-        if letra_ingresada in letras_usadas:  # si ya la uso no le sacamos una vida
-            print("Esa letra ya la ingresaste antes. Probe con otra.")
+        if letra in palabra:
+            letras_adivinadas.append(letra)
+            print("Bien! la letra", letra, "esta en la palabra")
         else:
-            letras_usadas = letras_usadas + letra_ingresada
-            if letra_ingresada in palabra_secreta:
-                letras_descubiertas = letras_descubiertas + letra_ingresada
-                print("MUY BIEN! La letra", letra_ingresada, "esta en la palabra.")
-            else:
-                vidas_restantes = vidas_restantes - 1
-                if vidas_restantes == 1:
-                    print("La letra", letra_ingresada, "no esta en la palabra. Te queda 1 vida.")
-                else:
-                    print("La letra", letra_ingresada, "no esta en la palabra. Te quedan", vidas_restantes, "vidas.")
+            vidas = vidas - 1
+            print("La letra", letra, "no esta. Perdiste una vida.")
 
-    print("")
-    if esta_completa(palabra_secreta, letras_descubiertas):
-        mostrar_casilleros(palabra_secreta, letras_descubiertas)
-        print("EXCELENTE! La palabra era", palabra_secreta)
-        print("La puerta del aula se abrio, superaste la Sala 1.")
+    if palabra_adivinada(palabra, letras_adivinadas) == True:
+        print("GANASTE! La palabra era:", palabra)
         return True
     else:
-        print("Te quedaste sin vidas. La palabra era", palabra_secreta)
-        print("No pudiste salir del aula. Perdiste el desafio.")
+        print("PERDISTE. Te quedaste sin vidas. La palabra era:", palabra)
         return False
