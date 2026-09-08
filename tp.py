@@ -106,17 +106,68 @@ def cerrar_sesion():
     """Opcion de cerrar sesion la cual vuelve al login."""
     print("Sesion cerrada con exito. Nos vemos")
 
+def validar_contraseña(nueva_contraseña, contraseña_actual):
+    """Verifica que la nueva contraseña cumpla todas las condiciones.
+
+    Condiciones: minimo 8 caracteres, al menos una mayuscula, una minuscula,
+    un numero y un caracter especial, sin espacios, y distinta de la actual.
+    Devuelve True si cumple todo, False si falla alguna (y avisa cual).
+    """
+    if len(nueva_contraseña) < 8:
+        print("Debe tener al menos 8 caracteres.")
+        return False
+    if nueva_contraseña == contraseña_actual:
+        print("La nueva contraseña debe ser distinta de la actual.")
+        return False
+
+    tiene_mayuscula = False
+    tiene_minuscula = False
+    tiene_numero = False
+    tiene_especial = False
+
+    for letra in nueva_contraseña:
+        if letra == " ":
+            print("La contraseña no puede contener espacios.")
+            return False
+        elif letra.isupper(): #tiene mayuscula
+            tiene_mayuscula = True
+        elif letra.islower(): #tiene minuscula
+            tiene_minuscula = True
+        elif letra.isdigit(): #tiene numero
+            tiene_numero = True
+        else:
+            tiene_especial = True
+
+    if tiene_mayuscula == False:
+        print("Debe contener al menos una letra mayuscula.")
+        return False
+    if tiene_minuscula == False:
+        print("Debe contener al menos una letra minuscula.")
+        return False
+    if tiene_numero == False:
+        print("Debe contener al menos un numero.")
+        return False
+    if tiene_especial == False:
+        print("Debe contener al menos un caracter especial.")
+        return False
+
+    return True
+
+
 def cambiar_contraseña(usuario_correcto, contraseña_correcta):
     """Pide los datos actuales y devuelve la contraseña que queda actualemente.
 
     Si valida bien, devuelve la nueva. En el otro caso, devuelve la actual sin cambios.
-    
+
     Da como parametros el usuario y la contraseña correctos para poder validar los datos ingresados por el usuario.
     """
     usuario_actual = input("Ingrese su usuario actual: ").strip()
     contraseña_actual = input("Ingrese su contraseña actual: ").strip()
     if validar_credenciales(usuario_actual, contraseña_actual, usuario_correcto, contraseña_correcta): #reutilizamps la funcion
-        nueva_contraseña = input("Ingrese su nueva contraseña: ").strip()
+        print("Los requisitos para la nueva contraseña son:\n Minimo 8 caracteres\n Al menos una mayuscula\n Una minuscula\n Un numero\n Un caracter especial\n Sin espacios\n Distinta de la actual.")
+        nueva_contraseña = input("Ingrese su nueva contraseña: ")
+        while validar_contraseña(nueva_contraseña, contraseña_correcta) == False: #si no cumple las condiciones, la vuelve a pedir
+            nueva_contraseña = input("Ingrese su nueva contraseña: ")
         print("Contraseña cambiada con exito.")
         encriptacion_nueva = encriptar(nueva_contraseña, DESPLAZAMIENTO) #usamos la funcion de encriptar para encriptar la nueva contraseña
         print("La nueva contraseña encriptada es:", encriptacion_nueva)
